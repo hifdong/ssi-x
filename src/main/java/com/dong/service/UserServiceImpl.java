@@ -14,12 +14,12 @@ import java.util.List;
  */
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
   @Autowired
    private UserDao userDao;
 
 
-    public List<User> getUserList(long id) {
+    public List<User> getUserList(int id) {
         return userDao.getUserList(1);
     }
 
@@ -30,4 +30,6 @@ public class UserServiceImpl {
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
+
+
 }

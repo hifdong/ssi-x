@@ -1,6 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       <!-- 引入jdbc配置文件 -->
+       <context:property-placeholder location="classpath:jdbc.properties" />
+
+       <!--创建jdbc数据源 -->
+       <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+             destroy-method="close">
+              <property name="driverClassName" value="${driver}" />
+              <property name="url" value="${url}" />
+              <property name="username" value="${username}" />
+              <property name="password" value="${password}" />
+       </bean>
+
+       <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+       <bean id="transactionManager"
+             class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+              <property name="dataSource" ref="dataSource" />
+       </bean>
+
+       <!-- 创建SqlSessionFactory，同时指定数据源 -->
+       <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+              <property name="dataSource" ref="dataSource" />
+       </bean>
+
+    <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.dong.dao.UserMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <!--<bean id="userDaoImpl" class="com.dong.dao.UserDaoImpl">-->
+        <!--<property name="userMapper" ref="userMapper"/>-->
+    <!--</bean>-->
+
+       <context:annotation-config/>
+       <context:component-scan base-package="com.dong.service"/>
+       <!-- 可通过注解控制事务 -->
+       <tx:annotation-driven />
+
+    <!--<bean name="userMapper" class="com.dong.dao.UserMapper">-->
+        <!--<property name="SessionFactory">-->
+            <!--<ref bean="sqlSessionFactory"/>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean name="userDao" class="com.dong.dao.UserDaoImpl">
+        <property name="userMapper">
+            <ref bean="userMapper"></ref>
+        </property>
+    </bean>
+
+       <bean name="userService" class="com.dong.service.UserServiceImpl">
+            <property name="userDao">
+                <ref bean = "userDao"/>
+            </property>
+       </bean>
+    
+
+
+       <!-- Mapper接口所在包名，Spring会自动查找其下的Mapper -->
+       <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+              <!--<property name="basePackage" value="com.dong.spring.mapper" />-->
+              <property name="basePackage" value="com.dong.dao" />
+       </bean>
+
+
 
 </beans>
