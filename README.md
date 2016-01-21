@@ -1,8 +1,8 @@
 # ssi-x
-ssi project
+ssi project，managed by maven.
 
 spring 2.4.3;
 
 spring mvc 2.4.3;
 
-mybatis ?
+mybatis 3.3.
