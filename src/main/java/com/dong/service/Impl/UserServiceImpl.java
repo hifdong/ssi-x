@@ -1,8 +1,8 @@
-package com.dong.service;
+package com.dong.service.Impl;
 
-import com.dong.dao.UserDao;
-import com.dong.dao.UserMapper;
+import com.dong.mapper.UserMapper;
 import com.dong.model.User;
+import com.dong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,20 +15,13 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-  @Autowired
-   private UserDao userDao;
 
+    @Autowired
+    private UserMapper userMapper;
 
     public List<User> getUserList(int id) {
-        return userDao.getUserList(1);
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+//        return userDao.getUserList(id);
+        return userMapper.getUserList(id);
     }
 
 

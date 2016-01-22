@@ -9,5 +9,5 @@ import java.util.List;
  * @Date: 16/1/20.
  */
 public interface UserService {
-    public List<User> getUserList(int id);
+    List<User> getUserList(int id);
 }
